@@ -370,6 +370,8 @@ func (r *OnePasswordItemResource) Read(ctx context.Context, req resource.ReadReq
 	item, err := r.client.GetItem(ctx, itemUUID, vaultUUID)
 	if err != nil {
 		resp.Diagnostics.AddWarning("1Password Item read error", fmt.Sprintf("Could not get item '%s' from vault '%s', got error: %s", itemUUID, vaultUUID, err))
+		resp.State.RemoveResource(ctx)
+		return
 	}
 
 	resp.Diagnostics.Append(itemToData(ctx, item, &data)...)
